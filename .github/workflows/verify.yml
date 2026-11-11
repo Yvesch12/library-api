@@ -20,7 +20,25 @@ jobs:
         run: |
           docker run -d --name library-smoke -p 18080:8080 library-api:lab4
           trap 'docker logs library-smoke; docker rm -f library-smoke' EXIT
-          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:18080/books -o books.json
+          ready=false
+          for attempt in {1..60}; do
+            if [ "$(docker inspect --format '{{.State.Running}}' library-smoke)" != true ]; then
+              echo 'Container exited before readiness'
+              exit 1
+            fi
+            if curl --fail --silent --max-time 3 http://localhost:18080/actuator/health -o health.json; then
+              if python3 -c 'import json; assert json.load(open("health.json"))["status"] == "UP"'; then
+                ready=true
+                break
+              fi
+            fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then
+            echo 'Container did not become healthy within the readiness deadline'
+            exit 1
+          fi
+          curl --fail http://localhost:18080/books -o books.json
           python3 -c 'import json; assert len(json.load(open("books.json"))) == 5'
           curl --fail http://localhost:18080/members -o members.json
           python3 -c 'import json; assert len(json.load(open("members.json"))) == 3'
