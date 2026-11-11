@@ -17,6 +17,8 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class BorrowingService {
+    private static final BigDecimal DAILY_FINE_RATE = new BigDecimal("0.50");
+    private static final int DEFAULT_LOAN_DAYS = 14;
     private final BookRepository books;
     private final MemberRepository members;
     private final BorrowingRepository borrowings;
@@ -32,10 +34,9 @@ public class BorrowingService {
         Member member = members.findById(memberId).orElseThrow(() -> new NoSuchElementException("Member not found"));
         if (!book.isAvailable()) { throw new IllegalStateException("Book is already borrowed"); }
         if (!member.isActive()) { throw new IllegalStateException("Member is inactive"); }
-        book.setAvailable(false);
-        books.save(book);
+        markAvailable(book, false);
         LocalDate today = LocalDate.now();
-        return borrowings.save(new Borrowing(null, book, member, today, today.plusDays(14),
+        return borrowings.save(new Borrowing(null, book, member, today, today.plusDays(DEFAULT_LOAN_DAYS),
                 null, new BigDecimal("0.00")));
     }
 
@@ -46,8 +47,7 @@ public class BorrowingService {
         LocalDate today = LocalDate.now();
         loan.setReturnDate(today);
         loan.setFineAmount(calculateFine(loan.getDueDate(), today));
-        loan.getBook().setAvailable(true);
-        books.save(loan.getBook());
+        markAvailable(loan.getBook(), true);
         return borrowings.save(loan);
     }
 
@@ -58,6 +58,15 @@ public class BorrowingService {
     }
 
     public BigDecimal calculateFine(LocalDate dueDate, LocalDate returnDate) {
-        return new BigDecimal("0.50").multiply(BigDecimal.valueOf(Math.max(0, ChronoUnit.DAYS.between(dueDate, returnDate))));
+        return DAILY_FINE_RATE.multiply(BigDecimal.valueOf(daysOverdue(dueDate, returnDate)));
+    }
+
+    private long daysOverdue(LocalDate dueDate, LocalDate returnDate) {
+        return Math.max(0, ChronoUnit.DAYS.between(dueDate, returnDate));
+    }
+
+    private void markAvailable(Book book, boolean available) {
+        book.setAvailable(available);
+        books.save(book);
     }
 }
