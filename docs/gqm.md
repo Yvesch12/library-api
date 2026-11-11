@@ -24,3 +24,9 @@ Measured values are recorded in `docs/lab6-metrics.json` and `reports/lab6-repor
 Lab 7 adds error-path tests and repeats the measurements in `docs/lab7-metrics.json`.
 Low method complexity makes inspection easier but cannot demonstrate correct
 business rules; coverage needs assertions and deliberate mutation experiments.
+
+M1 actual: BorrowingService constructor 1, borrowBook 3, returnBook 2,
+activeBorrowings 2, calculateFine 1, daysOverdue 1, markAvailable 1 (all Simple).
+M2 actual: Lab 6 service lines 61/61 (100%), branches 17/18 (94.44%);
+Lab 7 service lines 61/61 (100%), branches 18/18 (100%). Overall line coverage
+rose from 75.79% to 89.94%. Two controlled fine mutations were both detected.

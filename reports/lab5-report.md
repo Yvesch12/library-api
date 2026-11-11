@@ -55,4 +55,6 @@ every possible client interaction.
 
 The CI workflow is committed but no successful container run is asserted. Automatic
 approval review rejected reading a stored Git credential for a CI API query; the
-credential-reading helper was removed and that operation was not retried.
+credential-reading helper was removed and that operation was not retried at the
+Lab 5 checkpoint. The student later explicitly authorized a read-only CI status
+check; it confirmed the workflow was queued, not that the container had passed.

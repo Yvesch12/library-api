@@ -1,0 +1,22 @@
+{
+  "provenance": "Agent wall time, not personal student hours. Lab 8 checkpoint excludes final publication; Lab 1 not tracked.",
+  "handoutHours": {
+    "1": 2,
+    "2": 2.5,
+    "3": 2.5,
+    "4": 3,
+    "5": 2.5,
+    "6": 2.5,
+    "7": 3,
+    "8": 2.5
+  },
+  "agentHours": {
+    "2": 0.039,
+    "3": 0.029,
+    "4": 0.066,
+    "5": 0.042,
+    "6": 0.072,
+    "7": 0.095,
+    "8": 0.023
+  }
+}
