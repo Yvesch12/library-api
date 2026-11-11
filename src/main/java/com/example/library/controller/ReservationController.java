@@ -1,30 +1,32 @@
 package com.example.library.controller;
-import com.example.library.entity.Reservation;
-import com.example.library.service.ReservationService;
+import com.example.library.dto.*;
+import com.example.library.mapper.*;
+import com.example.library.service.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.net.URI;
-import java.util.*;
+import java.util.List;
 
-@RestController
+@RestController @Tag(name = "Reservations", description = "Reservation lifecycle")
 public class ReservationController {
     private final ReservationService service;
-    public ReservationController(ReservationService service) { this.service = service; }
-    public record ReservationRequest(@NotNull @Positive Long bookId, @NotNull @Positive Long memberId) { }
-    @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reserve(@Valid @RequestBody ReservationRequest request) {
-        Reservation result = service.reserve(request.bookId(), request.memberId());
+    private final ReservationMapper mapper;
+    public ReservationController(ReservationService service, ReservationMapper mapper) { this.service = service; this.mapper = mapper; }
+    @PostMapping("/reservations") @Operation(summary = "Create reservation")
+    @ApiResponses({@ApiResponse(responseCode = "201", description = "Created"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "409", description = "Conflict"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public ResponseEntity<ReservationDTO> create(@Valid @RequestBody LoanRequest request) {
+        ReservationDTO result = mapper.toDTO(service.reserve(request.bookId(), request.memberId()));
         return ResponseEntity.created(URI.create("/members/" + request.memberId() + "/reservations")).body(result);
     }
-    @GetMapping("/members/{id}/reservations")
-    public List<Reservation> list(@PathVariable Long id) { return service.list(id); }
-    @PutMapping("/reservations/{id}/cancel")
-    public Reservation cancel(@PathVariable Long id) { return service.cancel(id); }
-    @ExceptionHandler(IllegalStateException.class) @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String,String> conflict(IllegalStateException e) { return Map.of("error", e.getMessage()); }
-    @ExceptionHandler(NoSuchElementException.class) @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String,String> missing(NoSuchElementException e) { return Map.of("error", e.getMessage()); }
+    @PutMapping("/reservations/{id}/cancel") @Operation(summary = "cancel reservation")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "409", description = "Conflict"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public ReservationDTO cancel(@PathVariable Long id) { return mapper.toDTO(service.cancel(id)); }
+    @GetMapping("/members/{id}/reservations") @Operation(summary = "List member reservations")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public List<ReservationDTO> list(@PathVariable Long id) { return service.list(id).stream().map(mapper::toDTO).toList(); }
 }

@@ -1,0 +1,8 @@
+.git
+target
+*.log
+.idea
+.vscode
+reports
+docs
+scripts

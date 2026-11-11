@@ -1,0 +1,34 @@
+name: Verify API and container
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - run: mvn --batch-mode --no-transfer-progress verify
+      - run: docker build -t library-api:lab4 .
+      - name: Container HTTP smoke test
+        shell: bash
+        run: |
+          docker run -d --name library-smoke -p 18080:8080 library-api:lab4
+          trap 'docker logs library-smoke; docker rm -f library-smoke' EXIT
+          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:18080/books -o books.json
+          python3 -c 'import json; assert len(json.load(open("books.json"))) == 5'
+          curl --fail http://localhost:18080/members -o members.json
+          python3 -c 'import json; assert len(json.load(open("members.json"))) == 3'
+          curl --fail http://localhost:18080/api-docs -o api-docs.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-reports
+          path: |
+            target/surefire-reports
+            target/site/jacoco

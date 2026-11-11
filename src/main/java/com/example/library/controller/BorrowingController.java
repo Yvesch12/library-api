@@ -1,41 +1,32 @@
 package com.example.library.controller;
-
-import com.example.library.entity.Borrowing;
-import com.example.library.service.BorrowingService;
+import com.example.library.dto.*;
+import com.example.library.mapper.*;
+import com.example.library.service.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
-@RestController
+@RestController @Tag(name = "Borrowings", description = "Borrowing lifecycle")
 public class BorrowingController {
     private final BorrowingService service;
-    public BorrowingController(BorrowingService service) { this.service = service; }
-
-    public record BorrowRequest(@NotNull @Positive Long bookId, @NotNull @Positive Long memberId) { }
-
-    @PostMapping("/borrowings")
-    public ResponseEntity<Borrowing> borrow(@Valid @RequestBody BorrowRequest request) {
-        Borrowing loan = service.borrowBook(request.bookId(), request.memberId());
-        return ResponseEntity.created(URI.create("/members/" + request.memberId() + "/borrowings")).body(loan);
+    private final BorrowingMapper mapper;
+    public BorrowingController(BorrowingService service, BorrowingMapper mapper) { this.service = service; this.mapper = mapper; }
+    @PostMapping("/borrowings") @Operation(summary = "Create borrowing")
+    @ApiResponses({@ApiResponse(responseCode = "201", description = "Created"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "409", description = "Conflict"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public ResponseEntity<BorrowingDTO> create(@Valid @RequestBody LoanRequest request) {
+        BorrowingDTO result = mapper.toDTO(service.borrowBook(request.bookId(), request.memberId()));
+        return ResponseEntity.created(URI.create("/members/" + request.memberId() + "/borrowings")).body(result);
     }
-    @PutMapping("/borrowings/{id}/return")
-    public Borrowing returnBook(@PathVariable Long id) { return service.returnBook(id); }
-
-    @GetMapping("/members/{id}/borrowings")
-    public List<Borrowing> active(@PathVariable Long id) { return service.activeBorrowings(id); }
-
-    @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> conflict(IllegalStateException exception) { return Map.of("error", exception.getMessage()); }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> missing(NoSuchElementException exception) { return Map.of("error", exception.getMessage()); }
+    @PutMapping("/borrowings/{id}/return") @Operation(summary = "return borrowing")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "409", description = "Conflict"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public BorrowingDTO returnBook(@PathVariable Long id) { return mapper.toDTO(service.returnBook(id)); }
+    @GetMapping("/members/{id}/borrowings") @Operation(summary = "List member borrowings")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Invalid request"), @ApiResponse(responseCode = "404", description = "Not found"), @ApiResponse(responseCode = "500", description = "Internal error")})
+    public List<BorrowingDTO> list(@PathVariable Long id) { return service.activeBorrowings(id).stream().map(mapper::toDTO).toList(); }
 }

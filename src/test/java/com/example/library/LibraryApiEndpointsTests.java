@@ -156,7 +156,7 @@ class LibraryApiEndpointsTests {
 
     @Test
     void openApiDescribesAllRequiredRoutesAndSwaggerUiIsServed() throws Exception {
-        mockMvc.perform(get("/v3/api-docs"))
+        mockMvc.perform(get("/api-docs"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.paths['/books'].get").exists())
                 .andExpect(jsonPath("$.paths['/books'].post").exists())
