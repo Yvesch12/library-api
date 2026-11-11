@@ -142,8 +142,9 @@ docker run --rm -p 8080:8080 library-api:lab4
 
 Stop any existing local server first when using port 8080. Docker is not installed
 on the development host; local container execution has not been verified.
-The GitHub workflow builds Java, runs tests, builds the Docker image, and checks
-container HTTP responses. Check its actual status under the repository Actions tab.
+The GitHub workflow builds Java, runs tests, builds the Docker image, waits for
+container health, and checks HTTP responses. The Docker build and container checks
+passed in [run 43100862867](https://github.com/Yvesch12/library-api/actions/runs/43100862867).
 
 ## Course deliverables
 

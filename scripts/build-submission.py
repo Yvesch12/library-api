@@ -41,7 +41,7 @@ pages.append(page(1, 'Agentic development<br>Reference Lab execution', f'''
 <p>The final packaged Java application was started and checked over HTTP: five seed books, three seed members, health status UP, Swagger UI, and 14 documented operations. Static analysis and two deliberate fine-calculation bugs were also executed.</p>
 <h2>Roles and AI assistance</h2>
 <p>The student specified constraints, approved environment setup, reported a Maven failure, supplied the assignment, ran the application, and shared database/Swagger results. Codex performed the delegated implementation, test generation, automated analysis, and report preparation. The evidence distinguishes student interactions from agent-executed engineering activities.</p>
-<p class="note">Execution evidence covers the Java application and automated tests. Docker was unavailable locally, and GitHub Actions remained queued at the report check; container execution therefore remains unverified.</p>
+<p class="note">Execution evidence covers the Java application, automated tests, and a successful Docker image build and container HTTP check on GitHub's Linux runner. Docker was not installed on the local Windows host.</p>
 '''))
 pages.append(page(2, 'Interactions and decisions', '''
 <p>The examples below are excerpts from the actual conversation. Agent responses are summarized unless explicitly presented as terminal output.</p>
@@ -79,7 +79,7 @@ pages.append(page(3, 'Workflow and produced artifacts', f'''
 <li>{link('docs/lab5-refactor.diff')} &mdash; exact behavior-preserving changes.</li>
 <li>{link('docs/gqm.md')} &mdash; measurement goal, questions, metrics, results.</li>
 <li>{link('docs/lab7-test-audit.md')} and {link('docs/lab7-mutations.json')}.</li>
-<li>{link('Dockerfile')} and {link('.github/workflows/verify.yml')}.</li>
+<li>{link('Dockerfile')} and the <a href="{REPO}/blob/ba4ca9b/.github/workflows/verify.yml">verified CI workflow with container readiness checks</a>.</li>
 <li>Eight detailed reports under <a href="{REPO}/tree/{SNAPSHOT}/reports">reports/</a>.</li></ul>
 <h2>Architecture</h2>
 <div class="flow">HTTP JSON &rarr; DTO / controller &rarr; service &rarr; repository &rarr; H2</div>
@@ -114,6 +114,7 @@ pages.append(page(5, 'Review, problems and refinement', f'''
 <tr><td>Inconsistent validation response shape</td><td>Made custom advice take precedence over Spring Boot's default problem-details advice; handler integration tests passed.</td></tr>
 <tr><td>Mutable field-error map exposed</td><td>SpotBugs identified representation exposure; Map.copyOf plus an immutability test removed both targeted findings.</td></tr>
 <tr><td>HTTP test client discarded generated IDs</td><td>Removed Jackson read-only ID binding from shared DTOs; retained OpenAPI read-only metadata and service-side ID protection; real HTTP tests passed.</td></tr>
+<tr><td>CI queried the container before startup completed</td><td>The first request received a connection reset. A bounded health-readiness check now precedes API assertions; the Docker build and container checks subsequently passed.</td></tr>
 </table>
 <h2>Measured quality, with remaining findings</h2>
 <table><tr><th>Metric</th><th>Before</th><th>After</th></tr>
@@ -146,7 +147,7 @@ mvn pmd:pmd spotbugs:spotbugs pmd:check</pre>
 <p>The analysis commands generated PMD and SpotBugs XML reports. The test lifecycle generated JaCoCo HTML at <code>target/site/jacoco/index.html</code>. Committed XML snapshots and JSON summaries preserve the measured results without adding temporary build output to Git.</p>
 <p>Test-first history: commit <a href="{REPO}/commit/de6e233">de6e233</a> contains borrowing tests before BorrowingService. Progressive tags are available on the repository's <a href="{REPO}/tags">tags page</a>. Detailed limitations: {link('docs/submission-status.md')}.</p>
 <h2>Verification scope</h2>
-<p>The <a href="{REPO}/actions/runs/43098674544">GitHub container workflow</a> was queued at the latest check, so successful Docker execution is pending. Docker was not installed locally. The final Java-process smoke test is not presented as a container test.</p>
+<p>The <a href="{REPO}/actions/runs/43100862867">successful GitHub run</a> verified Maven tests, the Docker image build, health status UP, five books, three members, and OpenAPI JSON. Containers ran on GitHub's Linux runner; local Windows execution used Java directly.</p>
 <p>The results establish the documented functional and quality checks, while concurrent requests and production-database deployment remain outside the verified scope.</p>
 <h2>Conclusion</h2>
 <p>The Reference Lab produced a versioned REST API and a traceable sequence of specifications, tests, reviews, refactorings, and measurements. Environment, error-handling, and DTO failures prompted corrections backed by regression checks. This controlled exercise documents agentic development across SDLC activities and provides a reference for a separate final-project idea.</p>

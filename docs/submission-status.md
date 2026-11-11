@@ -22,8 +22,9 @@
 
 ## Evidence that must not be fabricated
 
-- Docker is absent locally. GitHub Actions was queued at the last authorized
-  status check; container success is not yet verified.
+- Docker is absent locally. Container execution was verified on GitHub's Linux
+  runner in run 43100862867: Maven verification, Docker image build, and container
+  HTTP checks passed after a readiness-wait fix (commit ba4ca9b).
 - Personal estimates/actual hours were never supplied. Agent wall-time measures
   and handout estimates are explicitly labelled; full personal EQF/productivity
   cannot be calculated from the available evidence.

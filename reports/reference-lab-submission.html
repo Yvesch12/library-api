@@ -39,7 +39,7 @@ footer span { float: right; }
 <p>The final packaged Java application was started and checked over HTTP: five seed books, three seed members, health status UP, Swagger UI, and 14 documented operations. Static analysis and two deliberate fine-calculation bugs were also executed.</p>
 <h2>Roles and AI assistance</h2>
 <p>The student specified constraints, approved environment setup, reported a Maven failure, supplied the assignment, ran the application, and shared database/Swagger results. Codex performed the delegated implementation, test generation, automated analysis, and report preparation. The evidence distinguishes student interactions from agent-executed engineering activities.</p>
-<p class="note">Execution evidence covers the Java application and automated tests. Docker was unavailable locally, and GitHub Actions remained queued at the report check; container execution therefore remains unverified.</p>
+<p class="note">Execution evidence covers the Java application, automated tests, and a successful Docker image build and container HTTP check on GitHub's Linux runner. Docker was not installed on the local Windows host.</p>
 <footer>Yvesch12 &nbsp; | &nbsp; 11 November 2026 <span>1 / 6</span></footer></section><section class="page"><header>SOFTWARE ENGINEERING / REFERENCE LAB</header><h1>Interactions and decisions</h1>
 <p>The examples below are excerpts from the actual conversation. Agent responses are summarized unless explicitly presented as terminal output.</p>
 <h2>1. Specify scope and restrict changes</h2>
@@ -75,7 +75,7 @@ footer span { float: right; }
 <li><a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/docs/lab5-refactor.diff">docs/lab5-refactor.diff</a> &mdash; exact behavior-preserving changes.</li>
 <li><a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/docs/gqm.md">docs/gqm.md</a> &mdash; measurement goal, questions, metrics, results.</li>
 <li><a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/docs/lab7-test-audit.md">docs/lab7-test-audit.md</a> and <a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/docs/lab7-mutations.json">docs/lab7-mutations.json</a>.</li>
-<li><a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/Dockerfile">Dockerfile</a> and <a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/.github/workflows/verify.yml">.github/workflows/verify.yml</a>.</li>
+<li><a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/Dockerfile">Dockerfile</a> and the <a href="https://github.com/Yvesch12/library-api/blob/ba4ca9b/.github/workflows/verify.yml">verified CI workflow with container readiness checks</a>.</li>
 <li>Eight detailed reports under <a href="https://github.com/Yvesch12/library-api/tree/cabb82398bfd477ad6e6e424947947e29c5e9d8f/reports">reports/</a>.</li></ul>
 <h2>Architecture</h2>
 <div class="flow">HTTP JSON &rarr; DTO / controller &rarr; service &rarr; repository &rarr; H2</div>
@@ -107,6 +107,7 @@ Total time: 19.391 s</pre>
 <tr><td>Inconsistent validation response shape</td><td>Made custom advice take precedence over Spring Boot's default problem-details advice; handler integration tests passed.</td></tr>
 <tr><td>Mutable field-error map exposed</td><td>SpotBugs identified representation exposure; Map.copyOf plus an immutability test removed both targeted findings.</td></tr>
 <tr><td>HTTP test client discarded generated IDs</td><td>Removed Jackson read-only ID binding from shared DTOs; retained OpenAPI read-only metadata and service-side ID protection; real HTTP tests passed.</td></tr>
+<tr><td>CI queried the container before startup completed</td><td>The first request received a connection reset. A bounded health-readiness check now precedes API assertions; the Docker build and container checks subsequently passed.</td></tr>
 </table>
 <h2>Measured quality, with remaining findings</h2>
 <table><tr><th>Metric</th><th>Before</th><th>After</th></tr>
@@ -138,7 +139,7 @@ mvn pmd:pmd spotbugs:spotbugs pmd:check</pre>
 <p>The analysis commands generated PMD and SpotBugs XML reports. The test lifecycle generated JaCoCo HTML at <code>target/site/jacoco/index.html</code>. Committed XML snapshots and JSON summaries preserve the measured results without adding temporary build output to Git.</p>
 <p>Test-first history: commit <a href="https://github.com/Yvesch12/library-api/commit/de6e233">de6e233</a> contains borrowing tests before BorrowingService. Progressive tags are available on the repository's <a href="https://github.com/Yvesch12/library-api/tags">tags page</a>. Detailed limitations: <a href="https://github.com/Yvesch12/library-api/blob/cabb82398bfd477ad6e6e424947947e29c5e9d8f/docs/submission-status.md">docs/submission-status.md</a>.</p>
 <h2>Verification scope</h2>
-<p>The <a href="https://github.com/Yvesch12/library-api/actions/runs/43098674544">GitHub container workflow</a> was queued at the latest check, so successful Docker execution is pending. Docker was not installed locally. The final Java-process smoke test is not presented as a container test.</p>
+<p>The <a href="https://github.com/Yvesch12/library-api/actions/runs/43100862867">successful GitHub run</a> verified Maven tests, the Docker image build, health status UP, five books, three members, and OpenAPI JSON. Containers ran on GitHub's Linux runner; local Windows execution used Java directly.</p>
 <p>The results establish the documented functional and quality checks, while concurrent requests and production-database deployment remain outside the verified scope.</p>
 <h2>Conclusion</h2>
 <p>The Reference Lab produced a versioned REST API and a traceable sequence of specifications, tests, reviews, refactorings, and measurements. Environment, error-handling, and DTO failures prompted corrections backed by regression checks. This controlled exercise documents agentic development across SDLC activities and provides a reference for a separate final-project idea.</p>

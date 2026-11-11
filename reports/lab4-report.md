@@ -48,3 +48,13 @@ All endpoint methods have Operation/ApiResponses and all DTO fields have Schema 
 The suite passed 24 tests with zero failures/errors. An initial check exposed
 Spring Boot's default problem-details advice taking precedence for validation;
 ordering the custom advice first fixed the response shape and the regression test.
+
+## Subsequent container verification
+
+GitHub run [43100862867](https://github.com/Yvesch12/library-api/actions/runs/43100862867)
+passed Maven verification, Docker image build, and container HTTP checks. The initial
+workflow requested HTTP before application startup completed and received curl
+error 56 (connection reset). Commit ba4ca9b added a bounded health-readiness loop
+before checking five books, three members, and OpenAPI JSON. This is real container
+execution on GitHub's Linux runner; local Docker installation remains unnecessary
+for this verification path.

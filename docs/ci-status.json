@@ -1,10 +1,55 @@
-[
-  {
-    "id": 43097157489,
-    "head_sha": "aa7190b1ef8370b2fd3c044845d22d892da0eae7",
-    "status": "queued",
-    "conclusion": null,
-    "html_url": "https://github.com/Yvesch12/library-api/actions/runs/43097157489",
-    "jobs": []
-  }
-]
+﻿{
+    "id":  43100862867,
+    "head_sha":  "ba4ca9b58b337ffdb9d179f618840a5b7ed448d2",
+    "status":  "completed",
+    "conclusion":  "success",
+    "html_url":  "https://github.com/Yvesch12/library-api/actions/runs/43100862867",
+    "jobs":  [
+                 {
+                     "job":  "verify",
+                     "conclusion":  "success",
+                     "steps":  [
+                                   {
+                                       "name":  "Set up job",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Run actions/checkout@v4",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Run actions/setup-java@v4",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Run mvn --batch-mode --no-transfer-progress verify",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Run docker build -t library-api:lab4 .",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Container HTTP smoke test",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Run actions/upload-artifact@v4",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Post Run actions/setup-java@v4",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Post Run actions/checkout@v4",
+                                       "conclusion":  "success"
+                                   },
+                                   {
+                                       "name":  "Complete job",
+                                       "conclusion":  "success"
+                                   }
+                               ]
+                 }
+             ]
+}
