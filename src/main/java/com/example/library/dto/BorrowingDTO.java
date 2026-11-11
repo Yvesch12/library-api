@@ -1,10 +1,8 @@
 package com.example.library.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
-import com.example.library.entity.ReservationStatus;
 
 public class BorrowingDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

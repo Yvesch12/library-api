@@ -12,7 +12,11 @@ import java.util.*;
 @org.springframework.core.annotation.Order(org.springframework.core.Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    public record ErrorResponse(String error, Instant timestamp, Map<String,String> fields) { }
+    public record ErrorResponse(String error, Instant timestamp, Map<String,String> fields) {
+        public ErrorResponse {
+            fields = Map.copyOf(fields);
+        }
+    }
     private ResponseEntity<ErrorResponse> response(HttpStatus status, String message, Map<String,String> fields) {
         return ResponseEntity.status(status).body(new ErrorResponse(message, Instant.now(), fields));
     }
