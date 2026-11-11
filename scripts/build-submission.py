@@ -29,19 +29,19 @@ def page(number, title, content):
 
 pages = []
 pages.append(page(1, 'Agentic development<br>Reference Lab execution', f'''
-<p class="subtitle">Moodle evidence summary &bull; Software Engineering 2026&ndash;2027</p>
+<p class="subtitle">Reference Lab execution report &bull; Software Engineering 2026&ndash;2027</p>
 <div class="identity"><b>Student account:</b> Yvesch12<br><b>Tool:</b> OpenAI Codex in the Windows / VS Code development workspace<br><b>Reference project:</b> Library Management REST API</div>
 <h2>Purpose and scope</h2>
 <p>This report documents the controlled Reference Lab, rather than a separate final-project idea. It summarizes how instructions, approval boundaries, generated artifacts, failures, tests, and refinements were used across the eight reference labs. It does not reproduce the full source code.</p>
 <h2>Implementation and evidence location</h2>
 <p><a href="{REPO}/tree/main">{REPO}/tree/main</a><br>Completed implementation checkpoint: <a href="{REPO}/tree/lab-8">tag lab-8</a>, commit <code>{SNAPSHOT[:7]}</code>.<br>Tags <code>lab-1</code> through <code>lab-8</code> preserve progressive snapshots.</p>
-<p>The code was committed and pushed to this repository. This PDF is a separate submission artifact; publishing to GitHub does not submit it to Moodle.</p>
+<p>The implementation and supporting artifacts are committed to the repository. This document summarizes the execution process and its evidence without reproducing the complete source code.</p>
 <h2>Verified result</h2>
 <div class="stats"><div><b>{tests}</b>passing tests</div><div><b>{metrics['overall']['LINE']['percent']}%</b>overall line coverage</div><div><b>100%</b>service line / branch coverage</div></div>
 <p>The final packaged Java application was started and checked over HTTP: five seed books, three seed members, health status UP, Swagger UI, and 14 documented operations. Static analysis and two deliberate fine-calculation bugs were also executed.</p>
-<h2>Evidence and authorship boundaries</h2>
-<p>The student specified constraints, approved environment setup, reported a Maven failure, supplied the assignment, ran the application, and shared database/Swagger results. Later implementation, tests, analysis, and report preparation were delegated to Codex. These artifacts demonstrate the recorded process; they are not proof of unobserved manual review or independent student mastery.</p>
-<p class="note">Docker was unavailable locally. GitHub Actions remained queued at the report check; a successful container run is not claimed. Personal study hours and the exact lecture table were not supplied.</p>
+<h2>Roles and AI assistance</h2>
+<p>The student specified constraints, approved environment setup, reported a Maven failure, supplied the assignment, ran the application, and shared database/Swagger results. Codex performed the delegated implementation, test generation, automated analysis, and report preparation. The evidence distinguishes student interactions from agent-executed engineering activities.</p>
+<p class="note">Execution evidence covers the Java application and automated tests. Docker was unavailable locally, and GitHub Actions remained queued at the report check; container execution therefore remains unverified.</p>
 '''))
 pages.append(page(2, 'Interactions and decisions', '''
 <p>The examples below are excerpts from the actual conversation. Agent responses are summarized unless explicitly presented as terminal output.</p>
@@ -56,10 +56,10 @@ pages.append(page(2, 'Interactions and decisions', '''
 <p>The supplied error said <code>mvn</code> was not recognized. The agent compared the saved user PATH with the terminal's inherited environment, then provided a session refresh. The student subsequently supplied output showing Maven 3.10.0 running on Java 17.0.21.</p>
 <h2>4. Guide the implementation with the handout</h2>
 <blockquote>“okay this is the deliverables, continue”</blockquote>
-<p>The initial skeleton was compared with the actual assignment. Missing entities, repositories, Book/Member routes, seed SQL, and Swagger were added. Later, “just finish everything” authorized the remaining labs; this was delegation, not evidence that every generated file had been personally reviewed.</p>
+<p>The initial skeleton was compared with the actual assignment. Missing entities, repositories, Book/Member routes, seed SQL, and Swagger were added. The student subsequently authorized completion of the remaining labs, which Codex implemented and checked through automated tests and analysis.</p>
 <h2>5. Validate observable behavior</h2>
 <p>The student ran <code>mvn spring-boot:run</code> and shared H2 and Swagger screenshots. The H2 view showed five book rows. Swagger showed <code>GET /books/1</code> returning 200 and an unknown ID returning 404 with <code>Book not found</code>. Codex then explained the controller-to-database request flow.</p>
-<p class="note">This report summarizes screenshots shown in the conversation; it does not label reconstructed text as an original screenshot. A later read-only CI credential check required explicit permission after automatic review rejected the first attempt.</p>
+<p class="note">Screenshot evidence is transcribed and identified as such in this report. A later read-only CI credential check required explicit permission after automatic review rejected the first attempt, providing another example of an enforced approval boundary.</p>
 '''))
 pages.append(page(3, 'Workflow and produced artifacts', f'''
 <p>The sequence followed inspection &rarr; proposal/authorization &rarr; edits &rarr; execution &rarr; review &rarr; refinement &rarr; versioned evidence.</p>
@@ -108,7 +108,7 @@ Total time: 19.391 s</pre>
 '''))
 pages.append(page(5, 'Review, problems and refinement', f'''
 <table><tr><th>Observed problem</th><th>Action and validation</th></tr>
-<tr><td>Java 24 selected / Maven unavailable</td><td>Use JDK 17, install verified Maven ZIP, configure user environment; refreshed terminal reports Java 17 and Maven 3.10.0.</td></tr>
+<tr><td>Java 24 selected / Maven unavailable</td><td>Configured JDK 17, installed a verified Maven ZIP, and updated the user environment; the refreshed terminal reported Java 17 and Maven 3.10.0.</td></tr>
 <tr><td>PowerShell download TLS decryption error</td><td>Retried using Windows curl with HTTPS verification enabled; SHA-512 matched before extraction.</td></tr>
 <tr><td>Initial scaffold incomplete for the handout</td><td>Compared against specified fields/endpoints and added missing model, seed data, routes and documentation.</td></tr>
 <tr><td>Inconsistent validation response shape</td><td>Made custom advice take precedence over Spring Boot's default problem-details advice; handler integration tests passed.</td></tr>
@@ -126,16 +126,15 @@ pages.append(page(5, 'Review, problems and refinement', f'''
 <p>After a passing baseline, the fine rate was temporarily changed from 0.50 to 1.00: <b>{len(mutations['double-rate']['failed'])} tests failed</b>. Returning null for an on-time fine caused <b>{len(mutations['null-on-time']['failed'])} tests to fail</b>. Both original mutations were restored, and the final clean build passed. Exact failed/passed test names are preserved in {link('docs/lab7-mutations.json', 'the mutation evidence')}.</p>
 <p class="note">Coverage indicates execution, not correctness. The deliberate bugs test whether specific assertions and database invariants protect the stated fine rules.</p>
 '''))
-pages.append(page(6, 'Reproduce, review and submit', f'''
-<h2>Run the reference application</h2>
-<pre>git clone {REPO}.git
-cd library-api
-git checkout lab-8
-java -version
+pages.append(page(6, 'Reproducibility and final results', f'''
+<h2>Execution and verification commands</h2>
+<p>The following commands were used during environment checks, application execution, and verification:</p>
+<pre>java -version
 mvn -version
 mvn clean verify
-mvn spring-boot:run</pre>
-<p>Use JDK 17 and Maven 3.x. Keep the server terminal open. The normal port is 8080; stop it with Ctrl+C. A previously started server must be restarted to load the latest code.</p>
+mvn spring-boot:run
+mvn pmd:pmd spotbugs:spotbugs pmd:check</pre>
+<p>The environment used JDK 17 and Maven 3.10.0. The application ran on port 8080 during the student's checks; isolated automated smoke checks used port 18080. H2 provided an in-memory development database with reproducible seed records.</p>
 <table><tr><th>URL</th><th>Expected observation</th></tr>
 <tr><td>http://localhost:8080/books</td><td>Five sample books on a fresh start</td></tr>
 <tr><td>http://localhost:8080/members</td><td>Three sample members on a fresh start</td></tr>
@@ -143,14 +142,14 @@ mvn spring-boot:run</pre>
 <tr><td>http://localhost:8080/api-docs</td><td>OpenAPI JSON (path changed in Lab 4)</td></tr>
 <tr><td>http://localhost:8080/actuator/health</td><td>status UP</td></tr>
 <tr><td>http://localhost:8080/h2-console</td><td>JDBC jdbc:h2:mem:librarydb; user sa; blank password</td></tr></table>
-<h2>Inspect the supporting evidence</h2>
-<p>Run <code>mvn pmd:pmd spotbugs:spotbugs pmd:check</code> for analyzer XML. JaCoCo HTML is produced by <code>mvn test</code> at <code>target/site/jacoco/index.html</code>. Committed XML snapshots and JSON summaries preserve measured results without adding build output to Git.</p>
+<h2>Supporting evidence</h2>
+<p>The analysis commands generated PMD and SpotBugs XML reports. The test lifecycle generated JaCoCo HTML at <code>target/site/jacoco/index.html</code>. Committed XML snapshots and JSON summaries preserve the measured results without adding temporary build output to Git.</p>
 <p>Test-first history: commit <a href="{REPO}/commit/de6e233">de6e233</a> contains borrowing tests before BorrowingService. Progressive tags are available on the repository's <a href="{REPO}/tags">tags page</a>. Detailed limitations: {link('docs/submission-status.md')}.</p>
-<h2>What remains unverified</h2>
+<h2>Verification scope</h2>
 <p>The <a href="{REPO}/actions/runs/43098674544">GitHub container workflow</a> was queued at the latest check, so successful Docker execution is pending. Docker was not installed locally. The final Java-process smoke test is not presented as a container test.</p>
-<p>No personal study-time history or manual student test authorship is invented. Later lab reports are AI-assisted execution records. Reading and explaining the artifacts is still necessary to demonstrate the student's understanding.</p>
-<h2>Submission</h2>
-<p>Review this PDF, then upload <b>reference-lab-submission.pdf</b> to Moodle. The implementation is already in the linked repository. Moodle upload has not been performed by Codex. This reference exercise is separate from the later final project based on the student's own idea.</p>
+<p>The results establish the documented functional and quality checks, while concurrent requests and production-database deployment remain outside the verified scope.</p>
+<h2>Conclusion</h2>
+<p>The Reference Lab produced a versioned REST API and a traceable sequence of specifications, tests, reviews, refactorings, and measurements. Environment, error-handling, and DTO failures prompted corrections backed by regression checks. This controlled exercise documents agentic development across SDLC activities and provides a reference for a separate final-project idea.</p>
 '''))
 
 css = '''
