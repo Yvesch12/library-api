@@ -89,7 +89,8 @@ empty password are intended for local lab development.
 - `src/main/resources/data.sql`: reproducible sample data, loaded after JPA schema creation
 - `src/test/java/com/example/library`: startup, persistence, endpoint, validation,
   and OpenAPI checks; transactional endpoint tests roll back their changes
-- `reports/lab1-report.md`: Lab 1 reflection draft and verification evidence
+- `reports/lab1-report.md`: Lab 1 reflections and verification evidence
+- `docs/lab1-walkthrough.md`: guided code review and manual verification
 
 Request flow: HTTP JSON -> controller -> repository -> H2; results return as JSON.
 The model and endpoints cover Lab 1 only. Borrowing workflows, reservations,

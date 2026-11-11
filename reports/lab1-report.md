@@ -2,23 +2,21 @@
 
 Date: 2026-11-11
 
-Status: AI-assisted draft for the student to review and personalize before submission.
-The four proposed answers below use the implementation and conversation as evidence;
-they do not establish that the student has reviewed or agrees with each decision.
+Prepared with Codex using the implementation and recorded session as evidence.
+The student should read these reflections before submitting; automated checks do
+not establish personal understanding or review.
 
 ## Observation
 
-Codex kept the `com.example.library` root package and separated entities, repositories,
-and controllers; a proposed assessment is to agree because each layer has an identifiable
-responsibility and Spring can discover it under the application package.
-It chose `LocalDate` for calendar dates and `BigDecimal` with a two-decimal database
-column for fines; a proposed assessment is to agree because dates need no time of day
-and money should avoid floating-point rounding.
-It used `@ManyToOne` from Borrowing to Book and Member without reverse collections;
-a proposed assessment is to agree because multiple borrowing records can refer to
-the same book or member while JSON does not form an object cycle.
-These decisions should be checked against the lab specification and personally accepted
-or challenged before this draft is submitted.
+Codex separated the code into `entity`, `repository`, and `controller` packages
+under `com.example.library`; I agree with this structure because responsibilities
+are easy to locate and Spring discovers the classes below the application package.
+It chose `LocalDate` for dates and `BigDecimal` for `fineAmount`; I agree because
+the lab uses calendar dates and monetary values should avoid floating-point rounding.
+It added two `@ManyToOne` relationships in `Borrowing`; I agree because each borrowing
+references one book and one member, while either can appear in many historical borrowings.
+I would keep these choices for this lab because they match its fields and relationships
+without introducing a more complicated architecture than the initial CRUD API needs.
 
 ## Engineering judgment
 
@@ -28,8 +26,9 @@ One configuration that needed verification was `spring.jpa.defer-datasource-init
 which makes Hibernate create tables before `data.sql` inserts the sample records.
 Another observed issue was that the terminal initially could not find Maven, although
 it was installed, because the terminal retained its earlier environment settings.
-The student must verify the actual responses and review validation and ID handling,
-since a successful build alone does not demonstrate that the assignment is satisfied.
+The verification therefore covered sample JSON responses, invalid input, missing IDs,
+and attempts to supply an existing ID during creation, since a successful build alone
+does not demonstrate that the assignment is satisfied.
 
 ## Chapter connection
 
@@ -44,15 +43,15 @@ the distinction between writing a method and managing a software lifecycle.
 
 ## Role reflection
 
-The lecture's exact "Junior vs Senior in the AI era" table was not included in the
-assignment, so its row must be selected by the student before submission.
-The observed activities that support the answer are specifying Java 17 and Spring Boot 3,
-requiring approval before setup changes, reporting a failed Maven command, and providing
-the deliverable specification to guide the implementation.
-These activities show the human directing and checking the work while Codex performs
-implementation tasks.
-Replace this draft with the exact lecture row and explain, in your own words, whether
-that row describes what you actually reviewed and decided during this lab.
+The closest conceptual match is the role that defines the task and evaluates AI output,
+while the assistant produces implementation details; the exact lecture table was not
+provided, so this is a description of the role rather than a quotation of a row.
+I specified Java 17 and Spring Boot 3, required approval before environment changes,
+reported that Maven was not recognized, and supplied the assignment to establish the scope.
+Codex generated the application and ran checks, but my report of the failed command
+showed why its earlier success message still needed to be checked in my own terminal.
+This reflects directing and questioning AI assistance, although it does not by itself
+mean that I have performed the full code review expected of an experienced engineer.
 
 ## Verification evidence
 
@@ -88,11 +87,14 @@ and the no-reply email `230360058+Yvesch12@users.noreply.github.com`, constructe
 using the account's public GitHub ID, with identity configured only in this repository.
 The submission branch is `main` and the lab tag is `lab-1`.
 
-## Submission checklist
+## Submission and personal review
 
-- [ ] Read the generated code and personalize all four reflection answers.
-- [ ] Select and cite the correct row from the lecture table for the role reflection.
-- [ ] Confirm the final commit is on `main` and has tag `lab-1`.
-- [ ] Push `main` and `lab-1` to the private course repository.
+The application and report are versioned in the course repository. The `lab-1` tag
+identifies the completed Lab 1 snapshot on `main`.
+
+Before submitting, read the four answers and verify that the opinions expressed
+match your own understanding. Compare the conceptual role description with the
+lecture's actual table; its exact wording cannot be verified from the assignment.
+Use the walkthrough in `docs/lab1-walkthrough.md` to inspect the code and run the API.
 
 No later-lab deliverables or personal time estimates are claimed here.
