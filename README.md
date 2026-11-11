@@ -147,6 +147,13 @@ container HTTP responses. Check its actual status under the repository Actions t
 
 ## Course deliverables
 
+Moodle submission: [reference-lab-submission.pdf](reports/reference-lab-submission.pdf)
+is the six-page execution/evidence summary. Review it and upload that one PDF to
+Moodle; the GitHub push is separate from the university submission.
+Its editable/printable source is [reference-lab-submission.html](reports/reference-lab-submission.html).
+`python scripts/build-submission.py` refreshes the HTML from measured artifacts;
+print it to A4 PDF with browser headers/footers disabled.
+
 Reports: `reports/lab1-report.md` through `reports/lab8-report.md`.
 Key artifacts: `docs/AGENTS.md`, `docs/sprint-backlog.md`, `docs/gqm.md`,
 static-analysis snapshots, coverage summaries, test audit, mutation evidence,
