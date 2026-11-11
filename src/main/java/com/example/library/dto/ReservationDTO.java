@@ -1,12 +1,10 @@
 package com.example.library.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import com.example.library.entity.ReservationStatus;
 
 public class ReservationDTO {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Schema(example = "1")
+    @Schema(example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     @Schema(example = "1")
     private Long bookId;

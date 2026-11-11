@@ -68,6 +68,8 @@ class BorrowingServiceUnitTest {
         when(members.findById(2L)).thenReturn(Optional.of(active()));
         assertThrows(IllegalStateException.class, () -> service.borrowBook(1L, 2L));
         verifyNoInteractions(borrowings);
+        verify(books, never()).save(any());
+        assertFalse(book.isAvailable());
     }
     @Test void inactiveMemberDoesNotWrite() {
         Book book = available(); Member member = active(); member.setActive(false);
@@ -76,6 +78,7 @@ class BorrowingServiceUnitTest {
         assertThrows(IllegalStateException.class, () -> service.borrowBook(1L, 2L));
         assertTrue(book.isAvailable());
         verifyNoInteractions(borrowings);
+        verify(books, never()).save(any());
     }
     @Test void returnOnTimeHasZeroFineAndRestoresBook() {
         Borrowing loan = loan(LocalDate.now().plusDays(1)); loan.getBook().setAvailable(false);
@@ -115,6 +118,7 @@ class BorrowingServiceUnitTest {
         assertEquals(returned, loan.getReturnDate());
         assertEquals(new BigDecimal("1.00"), loan.getFineAmount());
         verifyNoInteractions(books);
+        verify(borrowings, never()).save(any());
     }
     @Test void activeLoansUseMemberFilter() {
         when(members.existsById(2L)).thenReturn(true);
